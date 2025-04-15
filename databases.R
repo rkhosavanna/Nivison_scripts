@@ -79,6 +79,9 @@ data_comp_l37_l38 <- data_comp_l37_l38 %>% select(-c(idnova, time))
 
 #MSD_IgG3_PRNT_l37_l38 <- merge(data_comp_l37_l38, ZIKV_MSD_results_L37_L38, by = "id")
 MSD_IgG3_PRNT_l37_l49 <- merge(ZIKV_MSD_results_L37_L49, data_comp_l37_l38, by = "id", all.x = T)
+
+
+
 MSD_IgG3_PRNT_l37_l49$date_sample <- as.Date(MSD_IgG3_PRNT_l37_l49$date_sample)
 library(openxlsx) 
 write.xlsx(
@@ -87,7 +90,7 @@ write.xlsx(
 
 
 
+##########
 
-
-
+MSD_IgG3_PRNT_l37_l49 <- read_excel("MSD_IgG3_PRNT_l37_l49.xlsx")
 

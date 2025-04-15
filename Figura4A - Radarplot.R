@@ -1,21 +1,30 @@
 
 
-l37_l49_data_comp <- read_delim("Lista/ZIKV_DENV_MSD_Results_comp.csv",
-                                 delim = ";", escape_double = FALSE, trim_ws = TRUE)
+#l37_l49_data_comp <- read_delim("Lista/ZIKV_DENV_MSD_Results_comp.csv",
+#                                 delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
-l37_l38_data_comp <- l37_l49_data_comp %>% filter(Cohort  %in% c("L37", "L38") & is.na(Duplicate))
+MSD_IgG3_PRNT_l37_l49 <- read_excel("MSD_IgG3_PRNT_l37_l49.xlsx") 
 
-freq<- l37_l38_data_comp %>% filter(!is.na(grupo_MSDZika)) %>% group_by(idnova) %>% dplyr ::summarise(count=n())
+#l37_l38_data_comp <- l37_l49_data_comp %>% filter(Cohort  %in% c("L37", "L38") & is.na(Duplicate))
+l37_l38_data_comp <- MSD_IgG3_PRNT_l37_l49 |>
+  filter(Cohort  %in% c("L37", "L38") & is.na(Duplicate))
 
-l37_l38_data_comp2 <- l37_l38_data_comp %>% filter(!is.na(grupo_MSDZika))
+#freq<- l37_l38_data_comp %>% filter(!is.na(grupo_MSDZika)) %>% group_by(idnova) %>% dplyr ::summarise(count=n())
+freq<- l37_l38_data_comp %>% filter(!is.na(group_MSD)) %>% group_by(idnova) %>% dplyr ::summarise(count=n())
+
+#l37_l38_data_comp2 <- l37_l38_data_comp %>% filter(!is.na(grupo_MSDZika))
+l37_l38_data_comp2 <- l37_l38_data_comp %>% filter(!is.na(group_MSD))
 
 summary(as.factor(l37_l38_data_comp2$Cohort))
 
-g1 <- l37_l38_data_comp %>% filter(grupo_MSDZika==1)
-g2 <- l37_l38_data_comp %>% filter(grupo_MSDZika==2)
-g3 <- l37_l38_data_comp %>% filter(grupo_MSDZika==3)
-g4 <- l37_l38_data_comp %>% filter(grupo_MSDZika==4)
-
+#g1 <- l37_l38_data_comp %>% filter(grupo_MSDZika==1)
+#g2 <- l37_l38_data_comp %>% filter(grupo_MSDZika==2)
+#g3 <- l37_l38_data_comp %>% filter(grupo_MSDZika==3)
+#g4 <- l37_l38_data_comp %>% filter(grupo_MSDZika==4)
+g1 <- l37_l38_data_comp %>% filter(group_MSD==1)
+g2 <- l37_l38_data_comp %>% filter(group_MSD==2)
+g3 <- l37_l38_data_comp %>% filter(group_MSD==3)
+g4 <- l37_l38_data_comp %>% filter(group_MSD==4)
 
 
 
@@ -123,7 +132,7 @@ g1_summary_tbl %>%
 centre.y = grid.min - ((1/9) * (grid.max - grid.min))
 
 
-g1_summary_tbl %>%
+g1_radar <- g1_summary_tbl %>%
   ggradar(
     base.size = 4,
     values.radar = c("1", "3", "6"),
@@ -151,7 +160,93 @@ g1_summary_tbl %>%
   scale_color_manual(values = colors, name = "Cohort sampling") #+
   theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico
 
+g2_radar <- g2_summary_tbl %>%
+    ggradar(
+      base.size = 4,
+      values.radar = c("1", "3", "6"),
+      grid.min = 1, grid.mid = 3, grid.max = 6,
+      #centre.y = grid.min - ((1/9) * (grid.max - grid.min)),
+      label.centre.y = FALSE,
+      gridline.min.linetype = "longdash",
+      gridline.mid.linetype = "longdash",
+      gridline.max.linetype = "longdash",
+      gridline.label.offset = 0.2 * (grid.max - centre.y),
+      label.gridline.min = TRUE,
+      label.gridline.mid = TRUE,
+      label.gridline.max = TRUE,
+      #background.circle.colour = "#808080",
+      
+      axis.label.size = 4,
+      axis.label.offset = 1.15,    
+      grid.label.size = 4,
+      group.line.width = 1.2, 
+      group.point.size = 3,
+      gridline.mid.colour = "grey",
+      gridline.max.colour = "darkgrey",
+      plot.legend	= FALSE
+    ) +
+    scale_color_manual(values = colors, name = "Cohort sampling") #+
+  theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico
 
+g3_radar <- g3_summary_tbl %>%
+    ggradar(
+      base.size = 4,
+      values.radar = c("1", "3", "6"),
+      grid.min = 1, grid.mid = 3, grid.max = 6,
+      #centre.y = grid.min - ((1/9) * (grid.max - grid.min)),
+      label.centre.y = FALSE,
+      gridline.min.linetype = "longdash",
+      gridline.mid.linetype = "longdash",
+      gridline.max.linetype = "longdash",
+      gridline.label.offset = 0.2 * (grid.max - centre.y),
+      label.gridline.min = TRUE,
+      label.gridline.mid = TRUE,
+      label.gridline.max = TRUE,
+      #background.circle.colour = "#808080",
+      
+      axis.label.size = 4,
+      axis.label.offset = 1.15,    
+      grid.label.size = 4,
+      group.line.width = 1.2, 
+      group.point.size = 3,
+      gridline.mid.colour = "grey",
+      gridline.max.colour = "darkgrey",
+      plot.legend	= FALSE
+    ) +
+    scale_color_manual(values = colors, name = "Cohort sampling") #+
+  theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico  
+  
+  
+  
+g4_radar <- g4_summary_tbl %>%
+    ggradar(
+      base.size = 4,
+      values.radar = c("1", "3", "6"),
+      grid.min = 1, grid.mid = 3, grid.max = 6,
+      #centre.y = grid.min - ((1/9) * (grid.max - grid.min)),
+      label.centre.y = FALSE,
+      gridline.min.linetype = "longdash",
+      gridline.mid.linetype = "longdash",
+      gridline.max.linetype = "longdash",
+      gridline.label.offset = 0.2 * (grid.max - centre.y),
+      label.gridline.min = TRUE,
+      label.gridline.mid = TRUE,
+      label.gridline.max = TRUE,
+      #background.circle.colour = "#808080",
+      
+      axis.label.size = 4,
+      axis.label.offset = 1.15,    
+      grid.label.size = 4,
+      group.line.width = 1.2, 
+      group.point.size = 3,
+      gridline.mid.colour = "grey",
+      gridline.max.colour = "darkgrey",
+      plot.legend	= FALSE
+    ) +
+    scale_color_manual(values = colors, name = "Cohort sampling") #+
+  theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico
+  
+  
 #### Dados da Tailandia
 
 dfthai_KFCS <- read_excel("Dados Tailandia/KFCS MSD IgG 03APR24_clean.xlsx")
@@ -254,14 +349,19 @@ thai_second_summary_tbl %>%
 
 ########### Figura com os resultados de PRNT ----
 
-MSD_IgG3_PRNT_l37_l38 <- read_excel("Database/ajustadas/Bases para compartilhar/MSD_IgG3_PRNT_l37_l38.xlsx")
+#MSD_IgG3_PRNT_l37_l38 <- read_excel("Database/ajustadas/Bases para compartilhar/MSD_IgG3_PRNT_l37_l38.xlsx")
+MSD_IgG3_PRNT_l37_l38 <- MSD_IgG3_PRNT_l37_l49 |>
+  filter(Cohort %in% c("L37", "L38"))
 
 g1 <- MSD_IgG3_PRNT_l37_l38 %>% filter(grupo_MSDZikaPRNT==1)
 g2 <- MSD_IgG3_PRNT_l37_l38 %>% filter(grupo_MSDZikaPRNT==2)
 g3 <- MSD_IgG3_PRNT_l37_l38 %>% filter(grupo_MSDZikaPRNT==3)
 g4 <- MSD_IgG3_PRNT_l37_l38 %>% filter(grupo_MSDZikaPRNT==4)
 
-
+g1 <- MSD_IgG3_PRNT_l37_l38 %>% filter(group_MSD_PRNT==1)
+g2 <- MSD_IgG3_PRNT_l37_l38 %>% filter(group_MSD_PRNT==2)
+g3 <- MSD_IgG3_PRNT_l37_l38 %>% filter(group_MSD_PRNT==3)
+g4 <- MSD_IgG3_PRNT_l37_l38 %>% filter(group_MSD_PRNT==4)
 
 
 ####Figura 3 - Painel A Radar plot----
@@ -381,7 +481,7 @@ grid.min = 1
 grid.mid = 3
 grid.max = 6
 
-g4_summary_tbl %>%
+g4_PRNT_radar <- g4_summary_tbl %>%
   ggradar(
     base.size = 4,
     values.radar = c("1", "3", "6"),
@@ -408,3 +508,106 @@ g4_summary_tbl %>%
   ) +
   scale_color_manual(values = colors, name = "Cohort sampling") #+
 theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico
+
+g4_PRNT_radar
+
+
+g1_PRNT_radar <- g1_summary_tbl %>%
+  ggradar(
+    base.size = 4,
+    values.radar = c("1", "3", "6"),
+    grid.min = 1, grid.mid = 3, grid.max = 6,
+    #centre.y = grid.min - ((1/9) * (grid.max - grid.min)),
+    label.centre.y = FALSE,
+    gridline.min.linetype = "longdash",
+    gridline.mid.linetype = "longdash",
+    gridline.max.linetype = "longdash",
+    gridline.label.offset = 0.2 * (grid.max - centre.y),
+    label.gridline.min = TRUE,
+    label.gridline.mid = TRUE,
+    label.gridline.max = TRUE,
+    #background.circle.colour = "#808080",
+    
+    axis.label.size = 4,
+    axis.label.offset = 1.15,    
+    grid.label.size = 4,
+    group.line.width = 1.2, 
+    group.point.size = 3,
+    gridline.mid.colour = "grey",
+    gridline.max.colour = "darkgrey",
+    plot.legend	= FALSE
+  ) +
+  scale_color_manual(values = colors, name = "Cohort sampling") #+
+theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico
+
+g1_PRNT_radar
+
+
+g2_PRNT_radar <- g2_summary_tbl %>%
+  ggradar(
+    base.size = 4,
+    values.radar = c("1", "3", "6"),
+    grid.min = 1, grid.mid = 3, grid.max = 6,
+    #centre.y = grid.min - ((1/9) * (grid.max - grid.min)),
+    label.centre.y = FALSE,
+    gridline.min.linetype = "longdash",
+    gridline.mid.linetype = "longdash",
+    gridline.max.linetype = "longdash",
+    gridline.label.offset = 0.2 * (grid.max - centre.y),
+    label.gridline.min = TRUE,
+    label.gridline.mid = TRUE,
+    label.gridline.max = TRUE,
+    #background.circle.colour = "#808080",
+    
+    axis.label.size = 4,
+    axis.label.offset = 1.15,    
+    grid.label.size = 4,
+    group.line.width = 1.2, 
+    group.point.size = 3,
+    gridline.mid.colour = "grey",
+    gridline.max.colour = "darkgrey",
+    plot.legend	= FALSE
+  ) +
+  scale_color_manual(values = colors, name = "Cohort sampling") #+
+theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico
+
+
+
+g3_PRNT_radar <- g3_summary_tbl %>%
+  ggradar(
+    base.size = 4,
+    values.radar = c("1", "3", "6"),
+    grid.min = 1, grid.mid = 3, grid.max = 6,
+    #centre.y = grid.min - ((1/9) * (grid.max - grid.min)),
+    label.centre.y = FALSE,
+    gridline.min.linetype = "longdash",
+    gridline.mid.linetype = "longdash",
+    gridline.max.linetype = "longdash",
+    gridline.label.offset = 0.2 * (grid.max - centre.y),
+    label.gridline.min = TRUE,
+    label.gridline.mid = TRUE,
+    label.gridline.max = TRUE,
+    #background.circle.colour = "#808080",
+    
+    axis.label.size = 4,
+    axis.label.offset = 1.15,    
+    grid.label.size = 4,
+    group.line.width = 1.2, 
+    group.point.size = 3,
+    gridline.mid.colour = "grey",
+    gridline.max.colour = "darkgrey",
+    plot.legend	= FALSE
+  ) +
+  scale_color_manual(values = colors, name = "Cohort sampling") #+
+theme(text = element_text(size = 5))  # Ajusta todos os textos do gráfico
+
+
+fig4A <- ggsave(
+  (g2_PRNT_radar + g4_PRNT_radar) / (g1_PRNT_radar + g3_PRNT_radar)
+  , file="figures/fig4A.png", width = 10, height = 10)
+  
+
+fig4B <- ggsave(
+  (g2_radar + g4_radar) / (g1_radar + g3_radar)
+  , file="figures/fig4B.png", width = 10, height = 10)
+
