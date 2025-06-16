@@ -174,17 +174,21 @@ ggplot(denvs_p, aes(x = as.factor(time4_time1), y = propLog)) +
 ####new figure 3 ~~ figure 4B #####
 ##comparing MSD with PRNT
 
+MSD_IgG3_PRNT_l37_l49 <- read_excel("MSD_IgG3_PRNT_l37_l49.xlsx")
 
 foldchange <- MSD_IgG3_PRNT_l37_l49 |>
-  select(id,idnova,Cohort,date_sample,ZKNS1,D1NS1,D2NS1,D3NS1,D4NS1, group_MSD,denviggt_titers,avgzikvigg3,prnt_zikv,group_MSD_PRNT,zika_posIgG3,dengue_total_pos,zika_sc)
+  select(id,idnova,Cohort,Duplicate,date_sample,ZKNS1,D1NS1,D2NS1,D3NS1,D4NS1, group_MSD,denviggt_titers,avgzikvigg3,prnt_zikv,group_MSD_PRNT,zika_posIgG3,dengue_total_pos,zika_sc)
 
 foldchange <- foldchange |>
   filter(Cohort %in% c("L37", "L38")) |>
-  mutate(date_sample = as.Date(date_sample)) |>
-  distinct(id, .keep_all = TRUE)
+  mutate(date_sample = as.Date(date_sample)) #|>
+  #distinct(id, .keep_all = TRUE)
 
-#foldchange <- foldchange %>%
-#  mutate(idnova = format(idnova, scientific = FALSE))
+foldchange <- foldchange %>%
+  mutate(idnova = as.character(idnova))
+
+foldchange <- foldchange |>
+  filter(!Duplicate %in% 1)
 
 #foldchange <- foldchange |>
 #  filter(Cohort %in% c("L37", "L38")) |>
@@ -193,6 +197,7 @@ foldchange <- foldchange |>
 #  slice(1) |>
 #  ungroup()
 
+dim(foldchange)
 
 foldchange_wide <- foldchange %>%
   pivot_wider(
@@ -225,14 +230,14 @@ MSD_PRNT_l38 <- foldchange_wide |>
          Max_MSD = denv_fold)
 dim(MSD_PRNT_l38) #273 6
 
-MSD_PRNT_l38 %>%
-  mutate(id_str = format(idnova, scientific = FALSE)) %>%
-  count(id_str) %>%
-  filter(n > 1) %>% 
-  print(n = 52)
+#MSD_PRNT_l38 %>%
+#  mutate(id_str = format(idnova, scientific = FALSE)) %>%
+#  count(id_str) %>%
+#  filter(n > 1) %>% 
+#  print(n = 52)
 
-MSD_PRNT_l38 <- MSD_PRNT_l38 %>%
-  mutate(idnova = format(idnova, scientific = FALSE))
+#MSD_PRNT_l38 <- MSD_PRNT_l38 %>%
+#  mutate(idnova = format(idnova, scientific = FALSE))
 
 
 MSD_PRNT_l38 <- MSD_PRNT_l38 %>%
@@ -240,7 +245,7 @@ MSD_PRNT_l38 <- MSD_PRNT_l38 %>%
   arrange(is.na(group_MSD_PRNT_L38), .by_group = TRUE) %>%  # Prioritize rows with non-NA
   slice(1) %>%  # Keep only the first row per group
   ungroup()
-dim(MSD_PRNT_l38) #204 6
+dim(MSD_PRNT_l38) #204 6 -> 273 6
 
 MSD_PRNT_l38_long <- MSD_PRNT_l38 %>%
   pivot_longer(
@@ -333,8 +338,8 @@ plot(roc_fc_avdn, print.auc = TRUE, col = "blue", lwd = 3)
 
 ### Positivos
 # Encontre as coordenadas do ponto na curva ROC que maximiza a sensibilidade e a especificidade
-coords(roc_fc_avdp, "local maximas", ret=c("threshold", "sens", "spec", "ppv", "npv"))
-coords_fc_avdp <- coords(roc_fc_avdp, "best", ret = c("threshold", "sens", "spec", "ppv", "npv"))
+pROC::coords(roc_fc_avdp, "local maximas", ret=c("threshold", "sens", "spec", "ppv", "npv"))
+coords_fc_avdp <- pROC::coords(roc_fc_avdp, "best", ret = c("threshold", "sens", "spec", "ppv", "npv"))
 coords_fc_avdp
 
 coords_fc_avdp_all <- coords(
@@ -347,8 +352,8 @@ coords_fc_avdp_all
 
 ### Negativos
 # Encontre as coordenadas do ponto na curva ROC que maximiza a sensibilidade e a especificidade
-coords(roc_fc_avdn, "local maximas", ret=c("threshold", "sens", "spec", "ppv", "npv"))
-coords_fc_avdn <- coords(roc_fc_avdn, "best", ret = c("threshold", "sens", "spec", "ppv", "npv"))
+pROC::coords(roc_fc_avdn, "local maximas", ret=c("threshold", "sens", "spec", "ppv", "npv"))
+coords_fc_avdn <- pROC::coords(roc_fc_avdn, "best", ret = c("threshold", "sens", "spec", "ppv", "npv"))
 coords_fc_avdn
 
 
@@ -361,7 +366,7 @@ sum(naive2$ZKNS1_fold < 1.26)
 
 
 
-
+#####
 foldchange_wide |>
   filter(!is.na(zika_sc_L38)) |>
   filter(dengue_total_pos_L37 == "No") |>
