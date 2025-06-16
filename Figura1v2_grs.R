@@ -195,11 +195,11 @@ Group2 <- c("black", "red")
 df_plot = rbind(TRDP %>% rename(subject=project_id) %>% mutate(dataset="Brazilian\nZIKV infection") %>% select(Dia, ZKNS1, subject, dataset, Group1, Group2) ,
                 Emory %>% rename(Dia=DPSO) %>% mutate(dataset="United States\nZIKV infection") %>% select(Dia, ZKNS1, subject, dataset, Group1, Group2),
                 #dfthai_KFCS_prim2 %>% rename(Dia=time5) %>% mutate(dataset="Thai cases\n1° DENV infection") %>% select(Dia, ZKNS1, subject, dataset, Group),
-                dfthai_naive %>% rename(Dia=time5, ZKNS1=ZIKV, subject=subjectID) %>% mutate(dataset="Thai cases\n1° DENV infection") %>% select(Dia, ZKNS1, subject, dataset, Group1, Group2),
+                dfthai_naive %>% rename(Dia=time5, ZKNS1=ZIKV, subject=subjectID) %>% mutate(dataset="Thai primary\nDENV infection") %>% select(Dia, ZKNS1, subject, dataset, Group1, Group2),
                 #dfthai_KFCS_second2 %>% rename(Dia=time5) %>% mutate(dataset="Thai cases\n2° DENV infection") %>% select(Dia, ZKNS1, subject, dataset, Group),
-                dfthai_exposed %>% rename(Dia=time5, ZKNS1=ZIKV, subject=subjectID) %>% mutate(dataset="Thai cases\n2° DENV infection") %>% select(Dia, ZKNS1, subject, dataset, Group1, Group2),
+                dfthai_exposed %>% rename(Dia=time5, ZKNS1=ZIKV, subject=subjectID) %>% mutate(dataset="Thai post-primary\nDENV infection") %>% select(Dia, ZKNS1, subject, dataset, Group1, Group2),
                 dfthai_DHIM %>% rename(Dia=studyday) %>% mutate(dataset="Dengue Human\nInfection model") %>% select(Dia, ZKNS1, subject, dataset, Group1, Group2)) %>% 
-  mutate(dataset=factor(dataset, levels=c("Brazilian\nZIKV infection","United States\nZIKV infection","Thai cases\n1° DENV infection","Thai cases\n2° DENV infection","Dengue Human\nInfection model")))
+  mutate(dataset=factor(dataset, levels=c("Brazilian\nZIKV infection","United States\nZIKV infection","Thai primary\nDENV infection","Thai post-primary\nDENV infection","Dengue Human\nInfection model")))
 
 #group1
 p1 <- df_plot %>% 
@@ -227,11 +227,13 @@ p1 <- df_plot %>%
   scale_x_break(c(-170, -100), scales = 10) +
   scale_x_break(c(450, 800), scales = 1) +
   scale_x_break(c(930, 2000), scales = 1) +
-  scale_color_manual(values = Group1)  # aqui você define as cores dos grupos
+  scale_color_manual(values = Group1) +  # aqui você define as cores dos grupos
+  labs(colour = "Enrolled as",
+       x = "Days from Infection")
 
 p1
 ggplotly(p1)
-ggsave(p1, file="figures/option_1.png", width = 7, height = 10)
+ggsave(p1, file="figures/option_1.png", width = 7, height = 7)
 
 
 View(df_plot |>
